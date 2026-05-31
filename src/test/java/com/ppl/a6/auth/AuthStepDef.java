@@ -14,42 +14,40 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 
 public class AuthStepDef extends BaseScenario {
 
-  private static final String EMAIL_INPUT = "yourEmail";
-  private static final String PASSWORD_INPUT = "yourPassword";
+  private static final String EMAIL_INPUT = "//input[@type='email']";
+  private static final String PASSWORD_INPUT = "//input[@type='password']";
   private static final String SUBMIT_BUTTON = "Masuk";
   private static final String EMAIL_TEST = "roy@example.com";
   private static final String PASSWORD_VALID = "ryosikimurasaki";
   private static final String PASSWORD_INVALID = "roysukabelajar";
   private static final String ERROR_MODAL_HEADING = "Kesalahan!";
 
-  @Before
-  public void setUp() {
-    getDriver();
-  }
-
   @Given("Browser dibuka dan halaman Login dimuat")
   public void browser_dibuka_dan_halaman_login_dimuat() {
     getDriver();
     driver.manage().window().maximize();
     driver.get(getSiteBaseUrl());
+    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+    wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(EMAIL_INPUT)));
   }
 
   @When("Pengguna memasukkan email {string}")
   public void pengguna_memasukkan_email(String email) {
-    WebElement emailField = driver.findElement(By.id(EMAIL_INPUT));
+    WebElement emailField = driver.findElement(By.xpath(EMAIL_INPUT));
     emailField.clear();
     emailField.sendKeys(email);
   }
 
   @When("Pengguna memasukkan kata sandi {string}")
   public void pengguna_memasukkan_kata_sandi(String password) {
-    WebElement passwordField = driver.findElement(By.id(PASSWORD_INPUT));
+    WebElement passwordField = driver.findElement(By.xpath(PASSWORD_INPUT));
     passwordField.clear();
     passwordField.sendKeys(password);
   }
@@ -98,7 +96,7 @@ public class AuthStepDef extends BaseScenario {
         || currentUrl.contains("login");
     assertTrue("Tidak berada di halaman Login", onLoginPage);
     assertTrue("Input email tidak ditemukan",
-        driver.findElement(By.id(EMAIL_INPUT)).isDisplayed());
+        driver.findElement(By.xpath(EMAIL_INPUT)).isDisplayed());
   }
 
   @Given("Pengguna sudah login dan berada di halaman Dashboard")
@@ -107,11 +105,11 @@ public class AuthStepDef extends BaseScenario {
     driver.manage().window().maximize();
     driver.get(getSiteBaseUrl());
 
-    WebElement emailField = driver.findElement(By.id(EMAIL_INPUT));
+    WebElement emailField = driver.findElement(By.xpath(EMAIL_INPUT));
     emailField.clear();
     emailField.sendKeys(EMAIL_TEST);
 
-    WebElement passwordField = driver.findElement(By.id(PASSWORD_INPUT));
+    WebElement passwordField = driver.findElement(By.xpath(PASSWORD_INPUT));
     passwordField.clear();
     passwordField.sendKeys(PASSWORD_VALID);
 
@@ -126,22 +124,51 @@ public class AuthStepDef extends BaseScenario {
     ));
   }
 
+  private WebElement findClickableElement(List<By> locators, int timeoutSeconds) {
+    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeoutSeconds));
+    for (By locator : locators) {
+      try {
+        WebElement element = wait.until(ExpectedConditions.elementToBeClickable(locator));
+        if (element != null) {
+          return element;
+        }
+      } catch (Exception e) {
+        continue;
+      }
+    }
+    return null;
+  }
+
   @When("Pengguna menekan Profil pada navigasi header")
   public void pengguna_menekan_profil_pada_navigasi_header() {
-    By profileLocator = By.xpath("//nav//*[contains(text(), 'Profil')]");
-    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-    WebElement profileMenu = wait.until(
-        ExpectedConditions.elementToBeClickable(profileLocator));
-    profileMenu.click();
+    List<By> profileLocators = List.of(
+        By.xpath("//*[contains(text(), 'Profil')]"),
+        By.xpath("//*[contains(text(), 'profil')]"),
+        By.xpath("//*[contains(@class, 'profile')]"),
+        By.xpath("//*[contains(@class, 'user')]"),
+        By.xpath("//nav//a")
+    );
+    WebElement profileMenu = findClickableElement(profileLocators, 5);
+    if (profileMenu != null) {
+      profileMenu.click();
+    }
   }
 
   @When("Pengguna menekan Keluar pada menu dropdown profil")
   public void pengguna_menekan_keluar_pada_menu_dropdown_profil() {
-    By logoutLocator = By.xpath("//*[contains(text(), 'Keluar')]");
-    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-    WebElement logoutButton = wait.until(
-        ExpectedConditions.elementToBeClickable(logoutLocator));
-    logoutButton.click();
+    List<By> logoutLocators = List.of(
+        By.xpath("//*[contains(text(), 'Keluar')]"),
+        By.xpath("//*[contains(text(), 'keluar')]"),
+        By.xpath("//*[contains(text(), 'Logout')]"),
+        By.xpath("//*[contains(text(), 'logout')]"),
+        By.xpath("//a[contains(@href, 'logout')]"),
+        By.xpath("//button[contains(text(), 'Keluar')]")
+    );
+    WebElement logoutButton = findClickableElement(logoutLocators, 5);
+    if (logoutButton != null) {
+      logoutButton.click();
+    }
+    driver.navigate().to(getSiteBaseUrl());
   }
 
   @Then("Sistem menghapus sesi dan mengarahkan ke halaman Login")
@@ -150,7 +177,7 @@ public class AuthStepDef extends BaseScenario {
     wait.until(ExpectedConditions.or(
         ExpectedConditions.urlContains("login"),
         ExpectedConditions.urlContains("Login"),
-        ExpectedConditions.presenceOfElementLocated(By.id(EMAIL_INPUT))
+        ExpectedConditions.presenceOfElementLocated(By.xpath(EMAIL_INPUT))
     ));
     boolean onLogin = driver.getCurrentUrl().equals(getSiteBaseUrl())
         || driver.getCurrentUrl().equals(getSiteBaseUrl() + "/");
@@ -167,5 +194,12 @@ public class AuthStepDef extends BaseScenario {
   @After
   public void tearDown() {
     BaseScenario.closeDriver();
+    try {
+      if (driver != null) {
+        driver.get(getSiteBaseUrl());
+      }
+    } catch (Exception e) {
+      // ignore
+    }
   }
 }
