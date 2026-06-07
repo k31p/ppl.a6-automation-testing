@@ -16,3 +16,12 @@ Feature: Riwayat Kuis
     Examples:
       | keyword   |
       | Endfield  |
+
+  @positif @TC-FR11-03
+    Scenario: Halaman Inisialisasi Menampilkan Daftar Kursus yang Diikuti
+      Given Pelajar sudah login
+      And Pelajar terdaftar di minimal satu kursus
+      When Pengguna menavigasi ke menu Riwayat Kuis
+      And Mengamati daftar kursus yang ditampilkan
+      Then Daftar kursus yang telah diikuti oleh pelajar ditampilkan
+      And Kursus yang tidak didaftarkan oleh pelajar tidak ditampilkan
