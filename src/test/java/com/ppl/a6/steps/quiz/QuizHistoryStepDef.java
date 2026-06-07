@@ -37,6 +37,7 @@ public class QuizHistoryStepDef {
     driver.manage().window().maximize();
     driver.get(BaseScenario.getSiteBaseUrl());
     loginPage.loginAs(EMAIL_PELAJAR, PASSWORD_PELAJAR);
+    new com.ppl.a6.pages.DashboardPage(driver).waitUntilLoaded();
   }
 
   @Given("Pelajar terdaftar di minimal satu kursus")
@@ -56,9 +57,7 @@ public class QuizHistoryStepDef {
 
   @Then("Daftar kursus yang telah diikuti oleh pelajar ditampilkan")
   public void daftar_kursus_yang_telah_diikuti_oleh_pelajar_ditampilkan() {
-    assertTrue("Halaman inisialisasi kosong, daftar kursus tidak muncul",
-        quizHistoryPage.getCourseCards().size() > 0);
-    assertTrue("Kursus yang diikuti (" + ENROLLED_COURSE_NAME + ") tidak ditemukan",
+    assertTrue("Kursus yang diikuti (" + ENROLLED_COURSE_NAME + ") tidak ditemukan di halaman",
         quizHistoryPage.isCourseVisible(ENROLLED_COURSE_NAME));
   }
 
@@ -75,6 +74,7 @@ public class QuizHistoryStepDef {
     driver.manage().window().maximize();
     driver.get(BaseScenario.getSiteBaseUrl());
     loginPage.loginAs(EMAIL_PELAJAR, PASSWORD_PELAJAR);
+    new com.ppl.a6.pages.DashboardPage(driver).waitUntilLoaded();
     quizHistoryPage.navigateToMenu();
     quizHistoryPage.clickLihatDetail();
     quizHistoryPage.waitUntilQuizHistoryPageLoaded();

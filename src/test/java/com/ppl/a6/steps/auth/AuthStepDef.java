@@ -77,6 +77,22 @@ public class AuthStepDef {
     assertTrue("Input email tidak ditemukan", loginPage.isEmailInputVisible());
   }
 
+  @When("Pengguna tidak mengisi field email maupun password pada halaman Login")
+  public void pengguna_tidak_mengisi_field_email_maupun_password_pada_halaman_login() {
+    loginPage.clearEmailAndPassword();
+  }
+
+  @Then("Sistem menolak permintaan pengguna")
+  public void sistem_menolak_permintaan_pengguna() {
+    assertTrue("Tidak berada di halaman Login",
+        loginPage.isOnLoginPage(BaseScenario.getSiteBaseUrl()));
+  }
+
+  @Then("Sistem menampilkan pesan informatif bahwa field tersebut wajib diisi")
+  public void sistem_menampilkan_pesan_informatif_bahwa_field_tersebut_wajib_diisi() {
+    assertTrue("Pesan wajib diisi tidak ditampilkan", loginPage.isRequiredMessageDisplayed());
+  }
+
   @Given("Pengguna sudah login dan berada di halaman Dashboard")
   public void pengguna_sudah_login_dan_berada_di_halaman_dashboard() {
     driver.manage().window().maximize();

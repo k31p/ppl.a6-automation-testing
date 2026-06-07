@@ -30,6 +30,14 @@ Feature: Login dan Logout
       | email               | password         |
       | roy@example.com     | roysukabelajar   |
 
+  @negatif @TC-FR01-03
+  Scenario: Login dengan Form Kosong
+    Given Browser dibuka dan halaman Login dimuat
+    When Pengguna tidak mengisi field email maupun password pada halaman Login
+    And Pengguna menekan tombol Masuk
+    Then Sistem menolak permintaan pengguna
+    And Sistem menampilkan pesan informatif bahwa field tersebut wajib diisi
+
   @positif @TC-FR02-01
   Scenario: Logout berhasil melalui navigasi profil pada header setelah login
     Given Pengguna sudah login dan berada di halaman Dashboard

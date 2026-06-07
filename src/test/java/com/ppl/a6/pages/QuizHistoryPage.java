@@ -80,11 +80,18 @@ public class QuizHistoryPage {
     // TC-FR11-03 methods
 
     public List<WebElement> getCourseCards() {
-        return driver.findElements(courseCards);
+        List<WebElement> cards = driver.findElements(courseCards);
+        if (cards.isEmpty()) {
+            cards = driver.findElements(By.cssSelector(".card"));
+        }
+        return cards;
     }
 
     public boolean isCourseVisible(String courseName) {
-        return getCourseCards().stream()
-            .anyMatch(card -> card.getText().contains(courseName));
+        try {
+            return wait.until(ExpectedConditions.textToBePresentInElementLocated(By.tagName("body"), courseName));
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

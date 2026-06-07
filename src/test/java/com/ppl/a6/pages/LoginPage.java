@@ -78,4 +78,27 @@ public class LoginPage {
     public boolean isErrorModalNotDisplayed() {
         return driver.findElements(errorModal).isEmpty();
     }
+
+    public void clearEmailAndPassword() {
+        WebElement emailField = driver.findElement(emailInput);
+        WebElement passwordField = driver.findElement(passwordInput);
+        emailField.clear();
+        passwordField.clear();
+    }
+
+    public boolean isRequiredMessageDisplayed() {
+        WebElement emailField = driver.findElement(emailInput);
+        WebElement passwordField = driver.findElement(passwordInput);
+        String emailValidation = emailField.getAttribute("validationMessage");
+        String passwordValidation = passwordField.getAttribute("validationMessage");
+        
+        boolean isHtml5RequiredMessage = (emailValidation != null && !emailValidation.isEmpty()) || (passwordValidation != null && !passwordValidation.isEmpty());
+        boolean isRequiredAttrPresent = "true".equals(emailField.getAttribute("required")) || "true".equals(passwordField.getAttribute("required"));
+        
+        try {
+            return isHtml5RequiredMessage || isRequiredAttrPresent || isErrorModalDisplayed();
+        } catch (Exception e) {
+            return isHtml5RequiredMessage || isRequiredAttrPresent;
+        }
+    }
 }

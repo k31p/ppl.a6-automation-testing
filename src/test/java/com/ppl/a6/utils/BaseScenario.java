@@ -37,6 +37,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 public class BaseScenario {
@@ -51,13 +52,15 @@ public class BaseScenario {
         }
 
         String envName = System.getProperty("envName", "local");
-        String browserName = System.getProperty("browserName", "googlechrome");
+        String browserName = System.getProperty("browserName", "safari");
 
         if (envName.equalsIgnoreCase("local")) {
             if (browserName.equalsIgnoreCase("googlechrome")) {
                 driver = new ChromeDriver();
             } else if (browserName.equalsIgnoreCase("firefox")) {
                 driver = new FirefoxDriver();
+            } else if (browserName.equalsIgnoreCase("safari")) {
+                driver = new SafariDriver();
             }
         } else {
             ChromeOptions options = new ChromeOptions();
