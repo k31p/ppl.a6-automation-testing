@@ -28,7 +28,8 @@
                   <systemPropertyVariables>
                     <!-- Your Project Site Url -->
                     <siteUrl>https://polban-space.cloudias79.com/jtk-learn/</siteUrl>
-                    <!-- You can define more System.getProperty() here -->
+                    <browserName>googlechrome</browserName>
+                    <envName>local</envName>
                   </systemPropertyVariables>
                 </configuration>
               </plugin>

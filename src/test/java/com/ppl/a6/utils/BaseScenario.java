@@ -52,7 +52,7 @@ public class BaseScenario {
         }
 
         String envName = System.getProperty("envName", "local");
-        String browserName = System.getProperty("browserName", "safari");
+        String browserName = System.getProperty("browserName", "googlechrome");
 
         if (envName.equalsIgnoreCase("local")) {
             if (browserName.equalsIgnoreCase("googlechrome")) {
