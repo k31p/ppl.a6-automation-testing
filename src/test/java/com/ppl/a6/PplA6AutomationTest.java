@@ -1,6 +1,6 @@
 package com.ppl.a6;
 
-import com.ppl.a6.base.BaseScenario;
+import com.ppl.a6.utils.BaseScenario;
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
 import org.junit.AfterClass;

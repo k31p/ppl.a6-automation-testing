@@ -15,7 +15,7 @@ Feature: Riwayat Kuis
 
     Examples:
       | keyword   |
-      | Endfield  |
+      | karbit  |
 
   @positif @TC-FR11-03
     Scenario: Halaman Inisialisasi Menampilkan Daftar Kursus yang Diikuti

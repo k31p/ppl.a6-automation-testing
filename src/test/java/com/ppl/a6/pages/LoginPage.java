@@ -66,4 +66,16 @@ public class LoginPage {
     public boolean isEmailInputVisible() {
         return driver.findElement(emailInput).isDisplayed();
     }
+
+    public void waitForRedirectToLogin() {
+        wait.until(ExpectedConditions.or(
+            ExpectedConditions.urlContains("login"),
+            ExpectedConditions.urlContains("Login"),
+            ExpectedConditions.presenceOfElementLocated(emailInput)
+        ));
+    }
+
+    public boolean isErrorModalNotDisplayed() {
+        return driver.findElements(errorModal).isEmpty();
+    }
 }

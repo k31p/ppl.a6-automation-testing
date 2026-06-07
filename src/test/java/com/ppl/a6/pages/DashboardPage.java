@@ -28,12 +28,14 @@ public class DashboardPage {
 
     public boolean isProfileVisible() {
         return driver.findElements(By.className("navbar")).size() > 0
-            || driver.findElements(By.className("profile")).size() > 0;
+            || driver.findElements(By.className("profile")).size() > 0
+            || driver.findElements(By.cssSelector("li.nav-name")).size() > 0;
     }
 
     public void clickProfile() {
         List<By> locators = List.of(
-            By.xpath("//*[contains(text(), 'Profil')]"),
+            By.cssSelector("li.nav-name.dropdown > a.nav-link"),
+            By.cssSelector("img.profile-img"),
             By.xpath("//*[contains(@class, 'profile')]"),
             By.xpath("//*[contains(@class, 'user')]"),
             By.xpath("//nav//a")
@@ -43,10 +45,11 @@ public class DashboardPage {
 
     public void clickLogout() {
         List<By> locators = List.of(
+            By.xpath("//button[contains(text(), 'Keluar')]"),
             By.xpath("//*[contains(text(), 'Keluar')]"),
             By.xpath("//*[contains(text(), 'Logout')]"),
-            By.xpath("//a[contains(@href, 'logout')]"),
-            By.xpath("//button[contains(text(), 'Keluar')]")
+            By.cssSelector("button.dropdown-button"),
+            By.cssSelector("img.logout-icon")
         );
         clickFirstClickable(locators);
     }

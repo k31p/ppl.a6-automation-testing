@@ -1,6 +1,8 @@
-package com.ppl.a6.auth;
+package com.ppl.a6.steps.auth;
 
-import com.ppl.a6.base.BaseScenario;
+import com.ppl.a6.pages.DashboardPage;
+import com.ppl.a6.pages.LoginPage;
+import com.ppl.a6.utils.BaseScenario;
 
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
@@ -8,187 +10,102 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.time.Duration;
-import java.util.List;
+import org.openqa.selenium.WebDriver;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 
-public class AuthStepDef extends BaseScenario {
+public class AuthStepDef {
 
-  private static final String EMAIL_INPUT = "//input[@type='email']";
-  private static final String PASSWORD_INPUT = "//input[@type='password']";
-  private static final String SUBMIT_BUTTON = "Masuk";
+  private WebDriver driver;
+  private LoginPage loginPage;
+  private DashboardPage dashboardPage;
+
   private static final String EMAIL_TEST = "roy@example.com";
   private static final String PASSWORD_VALID = "ryosikimurasaki";
-  private static final String PASSWORD_INVALID = "roysukabelajar";
-  private static final String ERROR_MODAL_HEADING = "Kesalahan!";
+
+  @Before
+  public void setUp() {
+    driver = BaseScenario.getDriver();
+    loginPage = new LoginPage(driver);
+    dashboardPage = new DashboardPage(driver);
+  }
 
   @Given("Browser dibuka dan halaman Login dimuat")
   public void browser_dibuka_dan_halaman_login_dimuat() {
-    getDriver();
     driver.manage().window().maximize();
-    driver.get(getSiteBaseUrl());
-    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
-    wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(EMAIL_INPUT)));
+    driver.get(BaseScenario.getSiteBaseUrl());
+    loginPage.waitUntilLoaded();
   }
 
   @When("Pengguna memasukkan email {string}")
   public void pengguna_memasukkan_email(String email) {
-    WebElement emailField = driver.findElement(By.xpath(EMAIL_INPUT));
-    emailField.clear();
-    emailField.sendKeys(email);
+    loginPage.enterEmail(email);
   }
 
   @When("Pengguna memasukkan kata sandi {string}")
   public void pengguna_memasukkan_kata_sandi(String password) {
-    WebElement passwordField = driver.findElement(By.xpath(PASSWORD_INPUT));
-    passwordField.clear();
-    passwordField.sendKeys(password);
+    loginPage.enterPassword(password);
   }
 
   @When("Pengguna menekan tombol Masuk")
   public void pengguna_menekan_tombol_masuk() {
-    WebElement submitButton = driver.findElement(
-        By.xpath("//button[contains(text(), '" + SUBMIT_BUTTON + "')]"));
-    submitButton.click();
+    loginPage.clickSubmit();
   }
 
   @Then("Sistem memvalidasi kredensial dan mengarahkan ke halaman Dashboard")
   public void sistem_memvalidasi_kredensial_dan_mengarahkan_ke_halaman_dashboard() {
-    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-    boolean isDashboard = wait.until(
-        ExpectedConditions.or(
-            ExpectedConditions.urlContains("dashboard"),
-            ExpectedConditions.urlContains("Dashboard"),
-            ExpectedConditions.presenceOfElementLocated(By.className("dashboard"))
-        )
-    ) != null;
-    assertTrue("Gagal diarahkan ke halaman Dashboard", isDashboard);
+    dashboardPage.waitUntilLoaded();
+    assertTrue("Gagal diarahkan ke halaman Dashboard",
+        driver.getCurrentUrl().contains("dashboard"));
   }
 
   @Then("Nama pengguna yang login ditampilkan")
   public void nama_pengguna_yang_login_ditampilkan() {
-    boolean profileVisible = driver.findElements(By.className("navbar")).size() > 0
-        || driver.findElements(By.className("profile")).size() > 0;
-    assertTrue("Nama pengguna tidak ditemukan", profileVisible);
+    assertTrue("Nama pengguna tidak ditemukan", dashboardPage.isProfileVisible());
   }
 
   @Then("Sistem menampilkan notifikasi {string}")
   public void sistem_menampilkan_notifikasi(String message) {
-    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-    WebElement errorModal = wait.until(
-        ExpectedConditions.visibilityOfElementLocated(By.xpath(
-            "//h2[contains(text(), '" + ERROR_MODAL_HEADING + "')]")));
-    assertTrue("Notifikasi kesalahan tidak ditemukan", errorModal.isDisplayed());
+    assertTrue("Notifikasi kesalahan tidak ditemukan", loginPage.isErrorModalDisplayed());
   }
 
   @Then("Pengguna tetap berada di halaman Login")
   public void pengguna_tetap_berada_di_halaman_login() {
-    String currentUrl = driver.getCurrentUrl();
-    boolean onLoginPage = currentUrl.equals(getSiteBaseUrl())
-        || currentUrl.equals(getSiteBaseUrl() + "/")
-        || currentUrl.contains("login");
-    assertTrue("Tidak berada di halaman Login", onLoginPage);
-    assertTrue("Input email tidak ditemukan",
-        driver.findElement(By.xpath(EMAIL_INPUT)).isDisplayed());
+    assertTrue("Tidak berada di halaman Login",
+        loginPage.isOnLoginPage(BaseScenario.getSiteBaseUrl()));
+    assertTrue("Input email tidak ditemukan", loginPage.isEmailInputVisible());
   }
 
   @Given("Pengguna sudah login dan berada di halaman Dashboard")
   public void pengguna_sudah_login_dan_berada_di_halaman_dashboard() {
-    getDriver();
     driver.manage().window().maximize();
-    driver.get(getSiteBaseUrl());
-
-    WebElement emailField = driver.findElement(By.xpath(EMAIL_INPUT));
-    emailField.clear();
-    emailField.sendKeys(EMAIL_TEST);
-
-    WebElement passwordField = driver.findElement(By.xpath(PASSWORD_INPUT));
-    passwordField.clear();
-    passwordField.sendKeys(PASSWORD_VALID);
-
-    WebElement submitButton = driver.findElement(
-        By.xpath("//button[contains(text(), '" + SUBMIT_BUTTON + "')]"));
-    submitButton.click();
-
-    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-    wait.until(ExpectedConditions.or(
-        ExpectedConditions.urlContains("dashboard"),
-        ExpectedConditions.urlContains("Dashboard")
-    ));
-  }
-
-  private WebElement findClickableElement(List<By> locators, int timeoutSeconds) {
-    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeoutSeconds));
-    for (By locator : locators) {
-      try {
-        WebElement element = wait.until(ExpectedConditions.elementToBeClickable(locator));
-        if (element != null) {
-          return element;
-        }
-      } catch (Exception e) {
-        continue;
-      }
-    }
-    return null;
+    driver.get(BaseScenario.getSiteBaseUrl());
+    loginPage.loginAs(EMAIL_TEST, PASSWORD_VALID);
+    dashboardPage.waitUntilLoaded();
   }
 
   @When("Pengguna menekan Profil pada navigasi header")
   public void pengguna_menekan_profil_pada_navigasi_header() {
-    List<By> profileLocators = List.of(
-        By.xpath("//*[contains(text(), 'Profil')]"),
-        By.xpath("//*[contains(text(), 'profil')]"),
-        By.xpath("//*[contains(@class, 'profile')]"),
-        By.xpath("//*[contains(@class, 'user')]"),
-        By.xpath("//nav//a")
-    );
-    WebElement profileMenu = findClickableElement(profileLocators, 5);
-    if (profileMenu != null) {
-      profileMenu.click();
-    }
+    dashboardPage.clickProfile();
   }
 
   @When("Pengguna menekan Keluar pada menu dropdown profil")
   public void pengguna_menekan_keluar_pada_menu_dropdown_profil() {
-    List<By> logoutLocators = List.of(
-        By.xpath("//*[contains(text(), 'Keluar')]"),
-        By.xpath("//*[contains(text(), 'keluar')]"),
-        By.xpath("//*[contains(text(), 'Logout')]"),
-        By.xpath("//*[contains(text(), 'logout')]"),
-        By.xpath("//a[contains(@href, 'logout')]"),
-        By.xpath("//button[contains(text(), 'Keluar')]")
-    );
-    WebElement logoutButton = findClickableElement(logoutLocators, 5);
-    if (logoutButton != null) {
-      logoutButton.click();
-    }
-    driver.navigate().to(getSiteBaseUrl());
+    dashboardPage.clickLogout();
+    driver.navigate().to(BaseScenario.getSiteBaseUrl());
   }
 
   @Then("Sistem menghapus sesi dan mengarahkan ke halaman Login")
   public void sistem_menghapus_sesi_dan_mengarahkan_ke_halaman_login() {
-    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-    wait.until(ExpectedConditions.or(
-        ExpectedConditions.urlContains("login"),
-        ExpectedConditions.urlContains("Login"),
-        ExpectedConditions.presenceOfElementLocated(By.xpath(EMAIL_INPUT))
-    ));
-    boolean onLogin = driver.getCurrentUrl().equals(getSiteBaseUrl())
-        || driver.getCurrentUrl().equals(getSiteBaseUrl() + "/");
-    assertTrue("Tidak diarahkan ke halaman Login", onLogin);
+    loginPage.waitForRedirectToLogin();
+    assertTrue("Tidak diarahkan ke halaman Login",
+        loginPage.isOnLoginPage(BaseScenario.getSiteBaseUrl()));
   }
 
   @Then("Tidak ada pesan error yang ditampilkan")
   public void tidak_ada_pesan_error_yang_ditampilkan() {
-    boolean hasErrorModal = driver.findElements(
-        By.xpath("//h2[contains(text(), '" + ERROR_MODAL_HEADING + "')]")).size() > 0;
-    assertFalse("Terdapat pesan error setelah logout", hasErrorModal);
+    assertTrue("Terdapat pesan error setelah logout", loginPage.isErrorModalNotDisplayed());
   }
 
   @After
@@ -196,7 +113,7 @@ public class AuthStepDef extends BaseScenario {
     BaseScenario.closeDriver();
     try {
       if (driver != null) {
-        driver.get(getSiteBaseUrl());
+        driver.get(BaseScenario.getSiteBaseUrl());
       }
     } catch (Exception e) {
       // ignore
