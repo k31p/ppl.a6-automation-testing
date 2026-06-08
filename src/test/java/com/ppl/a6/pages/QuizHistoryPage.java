@@ -80,6 +80,14 @@ public class QuizHistoryPage {
     // TC-FR11-03 methods
 
     public List<WebElement> getCourseCards() {
+        try {
+            wait.until(ExpectedConditions.or(
+                ExpectedConditions.presenceOfElementLocated(courseCards),
+                ExpectedConditions.presenceOfElementLocated(By.cssSelector(".card"))
+            ));
+        } catch (Exception e) {
+            // Jika timeout, biarkan melanjutkan untuk me-return list kosong
+        }
         List<WebElement> cards = driver.findElements(courseCards);
         if (cards.isEmpty()) {
             cards = driver.findElements(By.cssSelector(".card"));

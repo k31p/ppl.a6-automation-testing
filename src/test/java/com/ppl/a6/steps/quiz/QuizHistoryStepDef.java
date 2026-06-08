@@ -22,7 +22,7 @@ public class QuizHistoryStepDef {
 
   private static final String EMAIL_PELAJAR = "roy@example.com";
   private static final String PASSWORD_PELAJAR = "ryosikimurasaki";
-  private static final String ENROLLED_COURSE_NAME = "Matematika Diskrit";
+  private static final String ENROLLED_COURSE_NAME = "Pengembangan Pabrik Endfield";
   private static final String UNENROLLED_COURSE_NAME = "Fisika Dasar";
 
   @Before
