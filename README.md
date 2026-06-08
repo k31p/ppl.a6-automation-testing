@@ -1,6 +1,5 @@
 # Automation Testing PPL A6
-
-Proyek ini digunakan untuk mengotomatisasi pengujian pada aplikasi JTK Learn. Test case mencakup modul Login dan Logout serta Riwayat Kuis berdasarkan dokumen `3A_029_Login & Logout dan TC-FR11-01_test result.xlsx`.
+Proyek ini digunakan untuk mengotomatisasi pengujian pada aplikasi JTK Learn. Test case mencakup modul Login dan Logout serta Riwayat Kuis berdasarkan dokumen 3A_029_Login & Logout dan TC-FR11-01_test result.xlsx dan 3A_011_Login & Quiz History_TC-FR01-03 TC-FR11-03_Test Result.xlsx
 
 ## Daftar Test Case
 
@@ -8,8 +7,10 @@ Proyek ini digunakan untuk mengotomatisasi pengujian pada aplikasi JTK Learn. Te
 |----|-------|------|----------|
 | TC-FR01-01 | AUTH | Positif | Login berhasil dengan kredensial pengguna yang valid sebagai role pelajar |
 | TC-FR01-02 | AUTH | Negatif | Login gagal dengan email yang tidak terdaftar |
+| TC-FR01-03 | AUTH | Negatif | Login dengan Form Kosong |
 | TC-FR02-01 | AUTH | Positif | Logout berhasil melalui navigasi profil pada header setelah login |
 | TC-FR11-01 | QUIZ | Positif | Pencarian kuis berdasarkan nama kuis pada halaman Daftar Riwayat Kuis berhasil |
+| TC-FR11-03 | QUIZ | Positif | Halaman Inisialisasi Menampilkan Daftar Kursus yang Diikuti |
 
 ## Tujuan Setiap Library
 
