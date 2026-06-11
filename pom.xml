@@ -28,9 +28,6 @@
                     <includes>
                         <include>**/JTKLearnTestRunner.java</include>
                     </includes>
-                    <systemPropertyVariables>
-                        <siteUrl>https://polban-space.cloudias79.com/jtk-learn/</siteUrl>
-                    </systemPropertyVariables>
                 </configuration>
             </plugin>
         </plugins>

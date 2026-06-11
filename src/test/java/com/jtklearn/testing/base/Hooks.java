@@ -40,13 +40,6 @@ public class Hooks extends BaseScenario {
 
     @After(order = 1)
     public void tearDown() {
-        BaseScenario.closeDriver();
-        try {
-            if (BaseScenario.getDriver() != null) {
-                BaseScenario.getDriver().get(getSiteBaseUrlStatic());
-            }
-        } catch (Exception e) {
-            // ignore
-        }
+        BaseScenario.quitDriver();
     }
 }

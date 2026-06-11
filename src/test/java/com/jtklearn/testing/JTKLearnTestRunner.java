@@ -8,7 +8,7 @@ import org.junit.runner.RunWith;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(
-    features = "src/test/resources/features",
+    features = "classpath:features",
     glue = "com.jtklearn.testing",
     plugin = {
         "pretty",

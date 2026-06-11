@@ -16,7 +16,9 @@ import java.util.List;
  */
 public class AuthActions extends BaseScenario {
 
-    private static final WebDriverWait wait = new WebDriverWait(getLocalDriverInstance(), Duration.ofSeconds(15));
+    private static WebDriverWait getWait() {
+        return new WebDriverWait(getDriverInstance(), Duration.ofSeconds(15));
+    }
 
     // ==================== LOGIN ACTIONS ====================
 
@@ -27,7 +29,7 @@ public class AuthActions extends BaseScenario {
         getDriver();
         getDriverInstance().manage().window().maximize();
         getDriverInstance().get(getSiteBaseUrl());
-        wait.until(ExpectedConditions.presenceOfElementLocated(AuthSelectors.EMAIL_INPUT));
+        getWait().until(ExpectedConditions.presenceOfElementLocated(AuthSelectors.EMAIL_INPUT));
     }
 
     /**
@@ -69,11 +71,11 @@ public class AuthActions extends BaseScenario {
      * Tunggu hingga dashboard muncul
      */
     public static void waitForDashboard() {
-        // JTKLearn: after login, URL stays at base URL but login form disappears.
-        // Wait for email input to become invisible = successfully left login page.
+        // After login, the "Masuk" button disappears — this is a reliable login-specific signal.
+        // Avoid using EMAIL_INPUT which may match other email inputs on the home page.
         WebDriverWait longWait = new WebDriverWait(getDriverInstance(), Duration.ofSeconds(30));
         longWait.until(ExpectedConditions.or(
-            ExpectedConditions.invisibilityOfElementLocated(AuthSelectors.EMAIL_INPUT),
+            ExpectedConditions.invisibilityOfElementLocated(AuthSelectors.SUBMIT_BUTTON),
             ExpectedConditions.urlContains("dashboard"),
             ExpectedConditions.urlContains("kursus"),
             ExpectedConditions.urlContains("beranda")
@@ -96,7 +98,7 @@ public class AuthActions extends BaseScenario {
      * Cek apakah error modal ditampilkan
      */
     public static boolean isErrorModalDisplayed() {
-        WebElement errorModal = wait.until(
+        WebElement errorModal = getWait().until(
             ExpectedConditions.visibilityOfElementLocated(AuthSelectors.ERROR_MODAL));
         return errorModal.isDisplayed();
     }
@@ -161,7 +163,7 @@ public class AuthActions extends BaseScenario {
      * Tunggu hingga halaman login muncul setelah logout
      */
     public static void waitForLoginPage() {
-        wait.until(ExpectedConditions.or(
+        getWait().until(ExpectedConditions.or(
             ExpectedConditions.urlContains("login"),
             ExpectedConditions.urlContains("Login"),
             ExpectedConditions.presenceOfElementLocated(AuthSelectors.EMAIL_INPUT)

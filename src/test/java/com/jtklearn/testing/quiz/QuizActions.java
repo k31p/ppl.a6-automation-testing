@@ -18,7 +18,9 @@ import static com.jtklearn.testing.quiz.QuizSelectors.*;
  */
 public class QuizActions extends BaseScenario {
 
-    private static final WebDriverWait wait = new WebDriverWait(getDriverInstance(), Duration.ofSeconds(10));
+    private static WebDriverWait getWait() {
+        return new WebDriverWait(getDriverInstance(), Duration.ofSeconds(10));
+    }
 
     /**
      * Buka halaman quiz history (Riwayat Kuis)
@@ -27,7 +29,7 @@ public class QuizActions extends BaseScenario {
         // Cari menu "Riwayat Kuis" di navbar dan klik
         try {
             // Selector: cari link nav "Riwayat Kuis"
-            WebElement historyMenu = wait.until(ExpectedConditions.elementToBeClickable(
+            WebElement historyMenu = getWait().until(ExpectedConditions.elementToBeClickable(
                 By.xpath("//a[contains(text(), 'Riwayat Kuis') or contains(text(), 'Riwayat') or contains(text(), 'History')]")));
             // Action: klik
             historyMenu.click();
@@ -37,7 +39,7 @@ public class QuizActions extends BaseScenario {
         }
 
         // Tunggu halaman Riwayat Hasil Kuis tampil
-        wait.until(ExpectedConditions.or(
+        getWait().until(ExpectedConditions.or(
             ExpectedConditions.urlContains("riwayat"),
             ExpectedConditions.presenceOfElementLocated(HISTORY_HEADING)
         ));
