@@ -11,6 +11,51 @@ Proyek ini digunakan untuk mengotomatisasi pengujian pada aplikasi JTKLearn meng
 | TC-FR02-03 | AUTH | Positif | Logout berhasil melalui navigasi profil pada header |
 | TC-FR11-05 | QUIZ | Positif | Melihat daftar riwayat kuis |
 
+### Detail & Alur Test Case
+
+#### 1. TC-FR01-04: Login Berhasil (Positif)
+*   **Tujuan**: Memastikan pengguna dengan kredensial valid dapat masuk ke sistem.
+*   **Langkah**:
+    1.  Buka browser, arahkan ke halaman Login JTKLearn.
+    2.  Masukkan email valid (`fredy.kurniadi.tif423@polban.ac.id`).
+    3.  Masukkan kata sandi valid (`fred`).
+    4.  Tekan tombol **Masuk**.
+*   **Hasil yang Diharapkan**:
+    *   Pengguna diarahkan ke halaman Dashboard.
+    *   Nama pengguna yang login ditampilkan pada antarmuka.
+
+#### 2. TC-FR01-05: Login Gagal (Negatif)
+*   **Tujuan**: Memastikan sistem menolak kredensial yang salah.
+*   **Langkah**:
+    1.  Buka browser, arahkan ke halaman Login JTKLearn.
+    2.  Masukkan email tidak terdaftar/salah (`invalid@example.com`).
+    3.  Masukkan kata sandi salah (`wrongpassword`).
+    4.  Tekan tombol **Masuk**.
+*   **Hasil yang Diharapkan**:
+    *   Sistem menampilkan notifikasi error ("Kesalahan!").
+    *   Pengguna tetap berada pada halaman Login.
+
+#### 3. TC-FR02-03: Logout Berhasil (Positif)
+*   **Tujuan**: Memastikan pengguna dapat keluar dari sesi aktif secara aman.
+*   **Langkah**:
+    1.  Masuk ke sistem dan pastikan berada di halaman Dashboard.
+    2.  Klik tombol **Profil** pada navigasi header.
+    3.  Klik pilihan **Keluar** pada menu dropdown yang muncul.
+*   **Hasil yang Diharapkan**:
+    *   Sesi login dihapus.
+    *   Pengguna diarahkan kembali ke halaman Login.
+    *   Tidak ada pesan error yang muncul.
+
+#### 4. TC-FR11-05: Melihat Daftar Riwayat Kuis (Positif)
+*   **Tujuan**: Memastikan pengguna (role pelajar) dapat melihat riwayat pengerjaan kuis.
+*   **Langkah**:
+    1.  Masuk ke sistem dan pastikan berada di halaman Dashboard.
+    2.  Navigasi ke halaman **Daftar Riwayat Kuis**.
+*   **Hasil yang Diharapkan**:
+    *   Daftar riwayat kuis yang pernah dikerjakan ditampilkan.
+    *   Kolom info tanggal pengerjaan kuis terlihat.
+    *   Kolom info skor nilai kuis terlihat.
+
 ## Prasyarat
 
 - Java JDK 11 atau lebih tinggi
