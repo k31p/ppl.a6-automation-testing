@@ -19,6 +19,10 @@ public class QuizSelectors {
     public static final By SCORE_COLUMN = By.xpath("//*[contains(text(), 'Skor') or contains(text(), 'Score') or contains(text(), 'Nilai')]");
     public static final By SCORE_HEADER = By.xpath("//th[contains(text(), 'Skor') or contains(text(), 'Score') or contains(text(), 'Nilai')]");
     public static final By LIHAT_DETAIL_BUTTON = By.xpath("//a[contains(text(), 'Lihat Detail') or contains(text(), 'Detail')]");
+    public static final By LIHAT_DETAIL_BTN = By.xpath("//button[contains(text(), 'Lihat Detail')]");
+    public static final By SEARCH_INPUT = By.cssSelector("input[placeholder='Search']");
+    public static final By HISTORY_CARD = By.cssSelector("div.history-card");
+    public static final By COURSE_CARDS = By.xpath("//div[contains(@class, 'course-card')]");
 
     private QuizSelectors() {
         // Private constructor to prevent instantiation

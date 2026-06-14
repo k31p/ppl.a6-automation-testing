@@ -101,4 +101,63 @@ public class QuizActions extends BaseScenario {
         List<WebElement> headingElements = getDriverInstance().findElements(HISTORY_HEADING);
         return headingElements.size() > 0 && getDriverInstance().getCurrentUrl().contains("riwayat");
     }
+
+    /**
+     * Klik tombol Lihat Detail
+     */
+    public static void clickLihatDetail() {
+        try {
+            WebElement btn = getWait().until(ExpectedConditions.elementToBeClickable(LIHAT_DETAIL_BTN));
+            btn.click();
+        } catch (Exception e) {
+            // mungkin sudah di halaman detail
+        }
+    }
+
+    /**
+     * Tunggu halaman riwayat detail loaded
+     */
+    public static void waitUntilQuizHistoryPageLoaded() {
+        getWait().until(ExpectedConditions.or(
+            ExpectedConditions.urlContains("history-quiz"),
+            ExpectedConditions.presenceOfElementLocated(SEARCH_INPUT),
+            ExpectedConditions.presenceOfElementLocated(HISTORY_CARD)
+        ));
+    }
+
+    /**
+     * Klik field pencarian
+     */
+    public static void clickSearchField() {
+        WebElement search = getWait().until(ExpectedConditions.elementToBeClickable(SEARCH_INPUT));
+        search.click();
+    }
+
+    /**
+     * Masukkan kata kunci pencarian kuis
+     */
+    public static void enterSearchKeyword(String keyword) {
+        WebElement search = getDriverInstance().findElement(SEARCH_INPUT);
+        search.clear();
+        search.sendKeys(keyword);
+    }
+
+    /**
+     * Dapatkan jumlah item kuis yang ditampilkan
+     */
+    public static int getQuizItemCount() {
+        List<WebElement> items = getDriverInstance().findElements(HISTORY_CARD);
+        return items.size();
+    }
+
+    /**
+     * Cek apakah nama kursus terlihat di halaman
+     */
+    public static boolean isCourseVisible(String courseName) {
+        try {
+            return getWait().until(ExpectedConditions.textToBePresentInElementLocated(By.tagName("body"), courseName));
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }

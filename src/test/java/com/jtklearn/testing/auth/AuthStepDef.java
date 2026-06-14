@@ -104,4 +104,19 @@ public class AuthStepDef extends BaseScenario {
     public void tidak_ada_pesan_error_yang_ditampilkan() {
         assertFalse("Terdapat pesan error setelah logout", hasErrorModal());
     }
+
+    @When("Pengguna tidak mengisi field email maupun password pada halaman Login")
+    public void pengguna_tidak_mengisi_field_email_maupun_password_pada_halaman_login() {
+        clearEmailAndPassword();
+    }
+
+    @Then("Sistem menolak permintaan pengguna")
+    public void sistem_menolak_permintaan_pengguna() {
+        assertTrue("Tidak berada di halaman Login", isOnLoginPage());
+    }
+
+    @Then("Sistem menampilkan pesan informatif bahwa field tersebut wajib diisi")
+    public void sistem_menampilkan_pesan_informatif_bahwa_field_tersebut_wajib_diisi() {
+        assertTrue("Pesan wajib diisi tidak ditampilkan", isRequiredMessageDisplayed());
+    }
 }

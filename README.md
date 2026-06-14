@@ -6,9 +6,15 @@ Proyek ini digunakan untuk mengotomatisasi pengujian pada aplikasi JTKLearn meng
 
 | TC ID | Modul | Jenis | Deskripsi |
 |-------|-------|-------|-----------|
+| TC-FR01-01 | AUTH | Positif | Login berhasil dengan kredensial valid (role pelajar) |
+| TC-FR01-02 | AUTH | Negatif | Login gagal dengan email yang tidak terdaftar |
+| TC-FR01-03 | AUTH | Negatif | Login dengan Form Kosong |
 | TC-FR01-04 | AUTH | Positif | Login berhasil dengan kredensial pengguna yang valid |
 | TC-FR01-05 | AUTH | Negatif | Login gagal dengan kredensial yang tidak valid |
+| TC-FR02-01 | AUTH | Positif | Logout berhasil melalui navigasi profil pada header |
 | TC-FR02-03 | AUTH | Positif | Logout berhasil melalui navigasi profil pada header |
+| TC-FR11-01 | QUIZ | Positif | Pencarian kuis berdasarkan nama kuis |
+| TC-FR11-03 | QUIZ | Positif | Halaman Inisialisasi Menampilkan Daftar Kursus |
 | TC-FR11-05 | QUIZ | Positif | Melihat daftar riwayat kuis |
 
 ### Detail & Alur Test Case

@@ -178,6 +178,37 @@ public class AuthActions extends BaseScenario {
         return errorModals.size() > 0;
     }
 
+    /**
+     * Clear email and password fields
+     */
+    public static void clearEmailAndPassword() {
+        WebElement emailField = getDriverInstance().findElement(AuthSelectors.EMAIL_INPUT);
+        WebElement passwordField = getDriverInstance().findElement(AuthSelectors.PASSWORD_INPUT);
+        emailField.clear();
+        passwordField.clear();
+    }
+
+    /**
+     * Cek apakah pesan informatif HTML5/error modal ditampilkan saat form kosong
+     */
+    public static boolean isRequiredMessageDisplayed() {
+        WebElement emailField = getDriverInstance().findElement(AuthSelectors.EMAIL_INPUT);
+        WebElement passwordField = getDriverInstance().findElement(AuthSelectors.PASSWORD_INPUT);
+        String emailValidation = emailField.getAttribute("validationMessage");
+        String passwordValidation = passwordField.getAttribute("validationMessage");
+        
+        boolean isHtml5RequiredMessage = (emailValidation != null && !emailValidation.isEmpty())
+            || (passwordValidation != null && !passwordValidation.isEmpty());
+        boolean isRequiredAttrPresent = "true".equals(emailField.getAttribute("required"))
+            || "true".equals(passwordField.getAttribute("required"));
+        
+        try {
+            return isHtml5RequiredMessage || isRequiredAttrPresent || isErrorModalDisplayed();
+        } catch (Exception e) {
+            return isHtml5RequiredMessage || isRequiredAttrPresent;
+        }
+    }
+
     // ==================== HELPER METHODS ====================
 
     /**
