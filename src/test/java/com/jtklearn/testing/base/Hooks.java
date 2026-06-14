@@ -11,6 +11,37 @@ import java.nio.file.Paths;
 public class Hooks extends BaseScenario {
 
     @After(order = 10)
+    public void takeScenarioScreenshot(Scenario scenario) {
+        try {
+            String filename = scenario.getName().replaceAll("[^a-zA-Z0-9_-]", "_");
+            for (String tag : scenario.getSourceTagNames()) {
+                if (tag.startsWith("@TC-")) {
+                    filename = tag.replace("@", "");
+                    break;
+                }
+            }
+            
+            if (getDriverInstance() != null) {
+                File screenshotDir = new File("target/screenshots");
+                if (!screenshotDir.exists()) {
+                    screenshotDir.mkdirs();
+                }
+                File screenshot = ((TakesScreenshot) getDriverInstance()).getScreenshotAs(OutputType.FILE);
+                String filepath = "target/screenshots/" + filename + ".png";
+                // Delete existing screenshot if any
+                File existing = new File(filepath);
+                if (existing.exists()) {
+                    existing.delete();
+                }
+                Files.copy(screenshot.toPath(), Paths.get(filepath));
+                System.out.println("Screenshot saved: " + filepath);
+            }
+        } catch (Exception e) {
+            System.err.println("Failed to take screenshot: " + e.getMessage());
+        }
+    }
+
+    @After(order = 10)
     public void takeScreenshotOnFailure(Scenario scenario) {
         if (scenario.isFailed()) {
             try {
